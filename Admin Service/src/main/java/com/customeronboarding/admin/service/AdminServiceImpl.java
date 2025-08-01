@@ -3,11 +3,10 @@ package com.customeronboarding.admin.service;
 import com.customeronboarding.admin.dto.DashboardMetricsDTO;
 import com.customeronboarding.admin.dto.KycReverifyRequestDTO;
 import com.customeronboarding.admin.dto.KycStatusResponseDTO;
-import com.customeronboarding.admin.entity.Customer;
-import com.customeronboarding.admin.entity.KycDocuments;
-import com.customeronboarding.admin.entity.KycStatus;
-import com.customeronboarding.admin.entity.KycStatusEnum;
+import com.customeronboarding.admin.dto.UserRegistrationRequestDTO;
+import com.customeronboarding.admin.entity.*;
 import com.customeronboarding.admin.mapper.KycStatusMapper;
+import com.customeronboarding.admin.repository.AdminUserRepository;
 import com.customeronboarding.admin.repository.CustomerRepository;
 import com.customeronboarding.admin.repository.KycDocumentsRepository;
 import com.customeronboarding.admin.repository.KycStatusRepository;
@@ -34,6 +33,9 @@ public class AdminServiceImpl implements AdminService {
     private final CustomerRepository customerRepository;
     private final KycDocumentsRepository kycDocumentsRepository;
     private final KycStatusMapper mapper;
+
+    @Autowired
+    private AdminUserRepository adminUserRepository;
 
 
     @Autowired
@@ -155,6 +157,21 @@ public class AdminServiceImpl implements AdminService {
                 .build();
     }
 
+    @Override
+    public String registerCustomer(UserRegistrationRequestDTO request) {
+        // 1. Check if a user already exists with the given username (email)
+        if (adminUserRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("User already exists with email: " + request.getUsername());
+        }
 
+        AdminUser user = new AdminUser();
+        user.setUsername(request.getUsername()); // Now taking username directly
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole().toUpperCase()); // Ensure role is uppercase
+        user.setCreatedAt(LocalDateTime.now());
+        adminUserRepository.save(user); // persist and retrieve saved user with ID
+
+        return "Customer registered successfully.";
+    }
 
 }

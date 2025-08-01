@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>OTP Email</title>
+</head>
+<body>
+<p>Dear User,</p>
+<p>Your OTP for password reset is: <strong th:text="${otp}">123456</strong></p>
+<p>This OTP is valid for 5 minutes. Do not share it with anyone.</p>
+<p>Regards,<br/>Customer Onboarding Team</p>
+</body>
+</html>

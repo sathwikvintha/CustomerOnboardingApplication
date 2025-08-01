@@ -7,11 +7,14 @@ com\customeronboarding\admin\dto\KycDocumentsResponseDTO.class
 com\customeronboarding\admin\repository\KycDocumentsRepository.class
 com\customeronboarding\admin\dto\OtpVerifyRequestDTO.class
 com\customeronboarding\admin\entity\OtpVerification$OtpVerificationBuilder.class
+com\customeronboarding\admin\dto\ResetPasswordRequestDTO.class
 com\customeronboarding\admin\entity\Customer.class
 com\customeronboarding\admin\mapper\KycStatusMapper.class
 com\customeronboarding\admin\entity\OtpVerification.class
 com\customeronboarding\admin\repository\CustomerRepository.class
 com\customeronboarding\admin\client\KycFeignClient.class
+com\customeronboarding\admin\dto\UserRegistrationRequestDTO.class
+com\customeronboarding\admin\dto\OtpRequestDTO.class
 com\customeronboarding\admin\entity\KycStatus.class
 com\customeronboarding\admin\controller\AuthController.class
 com\customeronboarding\admin\repository\OtpVerificationRepository.class
@@ -28,6 +31,7 @@ com\customeronboarding\admin\config\JwtAuthFilter.class
 com\customeronboarding\admin\controller\AdminController.class
 com\customeronboarding\admin\client\CustomerFeignClient.class
 com\customeronboarding\admin\enums\Role.class
+com\customeronboarding\admin\Util\OtpUtil.class
 com\customeronboarding\admin\service\AuthServiceImpl.class
 com\customeronboarding\admin\entity\KycDocuments$KycDocumentsBuilder.class
 com\customeronboarding\admin\service\AuthService.class

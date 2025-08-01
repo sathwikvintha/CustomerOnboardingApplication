@@ -3,6 +3,7 @@ package com.customeronboarding.admin.service;
 import com.customeronboarding.admin.dto.DashboardMetricsDTO;
 import com.customeronboarding.admin.dto.KycReverifyRequestDTO;
 import com.customeronboarding.admin.dto.KycStatusResponseDTO;
+import com.customeronboarding.admin.dto.UserRegistrationRequestDTO;
 import com.customeronboarding.admin.entity.Customer;
 import com.customeronboarding.admin.entity.KycDocuments;
 import org.springframework.data.domain.Page;
@@ -31,5 +32,8 @@ public interface AdminService {
     List<Customer> searchCustomersByEmail(String email);
 
     DashboardMetricsDTO getDashboardMetrics();
+
+    String registerCustomer(UserRegistrationRequestDTO request);
+
 
 }

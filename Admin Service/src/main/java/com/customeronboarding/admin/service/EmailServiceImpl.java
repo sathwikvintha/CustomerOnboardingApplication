@@ -38,6 +38,14 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(to, "Password Reset Request", "password-reset", context);
     }
 
+    // ✅ New OTP method
+    @Override
+    public void sendOtp(String to, String otp) {
+        Context context = new Context();
+        context.setVariable("otp", otp);
+        sendEmail(to, "Your OTP for Password Reset", "otp-email", context); // 'otp-email.html' should exist
+    }
+
     private void sendEmail(String to, String subject, String templateName, Context context) {
         try {
             MimeMessage message = mailSender.createMimeMessage();

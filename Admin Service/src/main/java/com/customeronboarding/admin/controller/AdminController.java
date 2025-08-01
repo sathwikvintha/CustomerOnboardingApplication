@@ -3,6 +3,7 @@ package com.customeronboarding.admin.controller;
 import com.customeronboarding.admin.dto.DashboardMetricsDTO;
 import com.customeronboarding.admin.dto.KycReverifyRequestDTO;
 import com.customeronboarding.admin.dto.KycStatusResponseDTO;
+import com.customeronboarding.admin.dto.UserRegistrationRequestDTO;
 import com.customeronboarding.admin.entity.Customer;
 import com.customeronboarding.admin.entity.KycDocuments;
 import com.customeronboarding.admin.service.AdminService;
@@ -84,4 +85,11 @@ public class AdminController {
     public ResponseEntity<DashboardMetricsDTO> getDashboardMetrics() {
         return ResponseEntity.ok(adminService.getDashboardMetrics());
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerCustomer(@RequestBody UserRegistrationRequestDTO request) {
+        String message = adminService.registerCustomer(request);
+        return ResponseEntity.ok(message);
+    }
+
 }

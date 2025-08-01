@@ -1,8 +1,6 @@
 package com.customeronboarding.admin.controller;
 
-import com.customeronboarding.admin.dto.AuthRequestDTO;
-import com.customeronboarding.admin.dto.AuthResponseDTO;
-import com.customeronboarding.admin.dto.OtpVerifyRequestDTO;
+import com.customeronboarding.admin.dto.*;
 import com.customeronboarding.admin.entity.AdminUser;
 import com.customeronboarding.admin.entity.Customer;
 import com.customeronboarding.admin.repository.AdminUserRepository;
@@ -59,4 +57,17 @@ public class AuthController {
         AuthResponseDTO response = authService.generateToken(request.getEmail());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/request-reset")
+    public ResponseEntity<String> requestReset(@RequestBody OtpRequestDTO request) {
+        authService.sendOtpForPasswordReset(request.getUsername());
+        return ResponseEntity.ok("OTP sent to your registered email");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
+        String msg = authService.resetPasswordWithOtp(request);
+        return ResponseEntity.ok(msg);
+    }
+
 }
