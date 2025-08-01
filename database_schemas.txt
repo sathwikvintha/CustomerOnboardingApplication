@@ -1,0 +1,79 @@
+# Database Schemas for Customer Onboarding Microservices Project
+
+====================================================
+🗂️ CUSTOMER-SERVICE
+====================================================
+
+-- Table: CUSTOMERS
+CREATE TABLE CUSTOMERS (
+    ID              NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    NAME            VARCHAR2(100),
+    EMAIL           VARCHAR2(100) UNIQUE,
+    PASSWORD        VARCHAR2(255),
+    PHONE           VARCHAR2(20),
+    ADDRESS         VARCHAR2(255),
+    CREATED_AT      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT      TIMESTAMP
+);
+
+====================================================
+🗂️ KYC-SERVICE
+====================================================
+
+-- Table: KYC_DOCUMENTS
+CREATE TABLE KYC_DOCUMENTS (
+    ID              NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    CUSTOMER_ID     NUMBER NOT NULL,
+    AADHAAR_PATH    VARCHAR2(255),
+    PAN_PATH        VARCHAR2(255),
+    PHOTO_PATH      VARCHAR2(255),
+    UPLOADED_AT     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: KYC_STATUS
+CREATE TABLE KYC_STATUS (
+    ID              NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    CUSTOMER_ID     NUMBER NOT NULL,
+    STATUS          VARCHAR2(20) CHECK (STATUS IN ('PENDING', 'VERIFIED', 'REJECTED')),
+    ADMIN_MESSAGE   VARCHAR2(255),
+    VERIFIED_BY     VARCHAR2(100),
+    VERIFIED_AT     TIMESTAMP
+);
+
+====================================================
+🗂️ ADMIN-SERVICE
+====================================================
+
+-- Table: ADMINS
+CREATE TABLE ADMINS (
+    ID              NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    USERNAME        VARCHAR2(50) UNIQUE,
+    EMAIL           VARCHAR2(100) UNIQUE,
+    PASSWORD        VARCHAR2(255),
+    ROLE            VARCHAR2(50),
+    CREATED_AT      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: AUDIT_LOGS
+CREATE TABLE AUDIT_LOGS (
+    ID              NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    ACTION          VARCHAR2(100),
+    DESCRIPTION     VARCHAR2(255),
+    PERFORMED_BY    VARCHAR2(100),
+    PERFORMED_AT    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: KYC_REVERIFICATION_REQUESTS
+CREATE TABLE KYC_REVERIFICATION_REQUESTS (
+    ID              NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    CUSTOMER_ID     NUMBER NOT NULL,
+    REASON          VARCHAR2(255),
+    REQUESTED_AT    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    STATUS          VARCHAR2(20) CHECK (STATUS IN ('PENDING', 'COMPLETED'))
+);
+
+====================================================
+📝 Notes:
+- Oracle DB is used.
+- Use appropriate sequences or identity columns for auto-increment.
+- Relationships are handled via CUSTOMER_ID as foreign key across services.
