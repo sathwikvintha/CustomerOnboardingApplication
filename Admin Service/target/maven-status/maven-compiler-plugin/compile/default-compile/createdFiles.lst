@@ -36,6 +36,7 @@ com\customeronboarding\admin\AdminApplication.class
 com\customeronboarding\admin\dto\LoginRequest.class
 com\customeronboarding\admin\entity\Customer$CustomerBuilder.class
 com\customeronboarding\admin\repository\AdminUserRepository.class
+com\customeronboarding\admin\dto\DashboardMetricsDTO$DashboardMetricsDTOBuilder.class
 com\customeronboarding\admin\service\OtpServiceImpl.class
 com\customeronboarding\admin\dto\KycStatusUpdateRequest.class
 com\customeronboarding\admin\entity\KycDocuments.class
