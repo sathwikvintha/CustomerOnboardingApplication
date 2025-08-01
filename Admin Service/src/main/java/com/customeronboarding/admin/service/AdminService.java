@@ -17,8 +17,6 @@ public interface AdminService {
 
     List<KycStatusResponseDTO> getAllKycByStatus(String status);
 
-    Page<KycStatusResponseDTO> getKycStatusByStatusPaged(String status, int page, int size);  // ✅ New
-
     List<Customer> getAllCustomers();
 
     String deleteCustomer(Long customerId);

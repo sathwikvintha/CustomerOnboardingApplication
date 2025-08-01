@@ -14,6 +14,8 @@ import com.customeronboarding.admin.repository.KycStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -60,10 +62,18 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<KycStatusResponseDTO> getAllKycByStatus(String status) {
-        return kycStatusRepository.findByStatus(status).stream()
+        KycStatusEnum enumStatus;
+        try {
+            enumStatus = KycStatusEnum.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status value: " + status);
+        }
+
+        return kycStatusRepository.findByStatus(enumStatus).stream()
                 .map(mapper::toKycStatusResponse)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public List<Customer> getAllCustomers() {
@@ -113,15 +123,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<KycStatusResponseDTO> getKycStatusByStatusPaged(String status, int page, int size) {
-        PageRequest pageable = PageRequest.of(page, size);
-        Page<KycStatus> pagedResult = kycStatusRepository.findByStatus(status, pageable);
-        return pagedResult.map(mapper::toKycStatusResponse);
-    }
-
-    @Override
     public List<Customer> searchCustomersByName(String name) {
-        return customerRepository.findByNameContainingIgnoreCase(name);
+        return customerRepository.findByFullNameContainingIgnoreCase(name);
     }
 
     @Override
@@ -132,12 +135,20 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public DashboardMetricsDTO getDashboardMetrics() {
         long totalCustomers = customerRepository.count();
-        long verifiedKyc = kycStatusRepository.countByStatus("VERIFIED");
-        long pendingKyc = kycStatusRepository.countByStatus("PENDING");
-        long rejectedKyc = kycStatusRepository.countByStatus("REJECTED");
+        long verified = kycStatusRepository.countByStatus(KycStatusEnum.valueOf(String.valueOf(KycStatusEnum.VERIFIED)));
+        long pending = kycStatusRepository.countByStatus(KycStatusEnum.valueOf(String.valueOf(KycStatusEnum.PENDING)));
+        long rejected = kycStatusRepository.countByStatus(KycStatusEnum.valueOf(String.valueOf(KycStatusEnum.REJECTED)));
+        long noKyc = customerRepository.countByKycStatusIsNull();
 
-        return new DashboardMetricsDTO(totalCustomers, verifiedKyc, pendingKyc, rejectedKyc);
+        return DashboardMetricsDTO.builder()
+                .totalCustomers(totalCustomers)
+                .kycVerified(verified)
+                .kycPending(pending)
+                .kycRejected(rejected)
+                .kycNotSubmitted(noKyc)
+                .build();
     }
+
 
 
 }

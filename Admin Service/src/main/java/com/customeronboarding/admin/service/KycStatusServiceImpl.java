@@ -42,7 +42,7 @@ public class KycStatusServiceImpl implements KycStatusService {
 
     @Override
     public List<KycStatusResponseDTO> getAllPendingKyc() {
-        return repository.findByStatus("PENDING").stream()
+        return repository.findByStatus(KycStatusEnum.valueOf("PENDING")).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

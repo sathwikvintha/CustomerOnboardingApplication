@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    List<Customer> findByNameContainingIgnoreCase(String fullName);
+    List<Customer> findByFullNameContainingIgnoreCase(String fullName);
     List<Customer> findByEmailContainingIgnoreCase(String email);
+    long countByKycStatusIsNull();
 }
