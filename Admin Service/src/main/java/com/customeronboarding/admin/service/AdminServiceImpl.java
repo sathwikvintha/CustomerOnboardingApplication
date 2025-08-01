@@ -12,10 +12,12 @@ import com.customeronboarding.admin.repository.CustomerRepository;
 import com.customeronboarding.admin.repository.KycDocumentsRepository;
 import com.customeronboarding.admin.repository.KycStatusRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -32,6 +34,10 @@ public class AdminServiceImpl implements AdminService {
     private final CustomerRepository customerRepository;
     private final KycDocumentsRepository kycDocumentsRepository;
     private final KycStatusMapper mapper;
+
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public String updateKycStatus(KycStatusResponseDTO request) {
@@ -135,9 +141,9 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public DashboardMetricsDTO getDashboardMetrics() {
         long totalCustomers = customerRepository.count();
-        long verified = kycStatusRepository.countByStatus(KycStatusEnum.valueOf(String.valueOf(KycStatusEnum.VERIFIED)));
-        long pending = kycStatusRepository.countByStatus(KycStatusEnum.valueOf(String.valueOf(KycStatusEnum.PENDING)));
-        long rejected = kycStatusRepository.countByStatus(KycStatusEnum.valueOf(String.valueOf(KycStatusEnum.REJECTED)));
+        long verified = kycStatusRepository.countByStatus(KycStatusEnum.VERIFIED);
+        long pending = kycStatusRepository.countByStatus(KycStatusEnum.PENDING);
+        long rejected = kycStatusRepository.countByStatus(KycStatusEnum.REJECTED);
         long noKyc = customerRepository.countByKycStatusIsNull();
 
         return DashboardMetricsDTO.builder()

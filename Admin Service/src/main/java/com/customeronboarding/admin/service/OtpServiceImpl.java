@@ -1,52 +1,40 @@
 package com.customeronboarding.admin.service;
 
-import com.customeronboarding.admin.entity.OtpVerification;
-import com.customeronboarding.admin.repository.OtpVerificationRepository;
+import com.customeronboarding.admin.dto.OtpData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
 public class OtpServiceImpl implements OtpService {
 
-    private final OtpVerificationRepository otpRepo;
     private final JavaMailSender mailSender;
 
+    // In-memory store: email -> OTP data
+    private final Map<String, OtpData> otpStore = new ConcurrentHashMap<>();
+
     @Override
-    public String generateAndSendOtp(String email) {
+    public void generateAndSendOtp(String email) {
         String otp = String.format("%06d", new Random().nextInt(1000000));
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
 
-        Optional<OtpVerification> existingOtpOpt = otpRepo.findByEmail(email);
+        // Store OTP in memory
+        otpStore.put(email, new OtpData(otp, expiryTime));
 
-        OtpVerification otpRecord = existingOtpOpt.map(existing -> {
-            existing.setOtp(otp);
-            existing.setExpiryTime(expiryTime);
-            existing.setVerified(false);
-            return existing;
-        }).orElse(OtpVerification.builder()
-                .email(email)
-                .otp(otp)
-                .expiryTime(expiryTime)
-                .verified(false)
-                .build());
-
-        otpRepo.save(otpRecord);
-
-        // Send email
+        // Send OTP via email
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("Your OTP Code");
         message.setText("Your OTP is: " + otp + "\nIt is valid for 5 minutes.");
         mailSender.send(message);
 
-        return "OTP sent successfully to " + email;
     }
 
     @Override
@@ -56,13 +44,25 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public boolean verifyOtp(String email, String otp) {
-        return otpRepo.findByEmailAndOtp(email, otp)
-                .filter(o -> !o.isVerified())
-                .filter(o -> o.getExpiryTime().isAfter(LocalDateTime.now()))
-                .map(entity -> {
-                    entity.setVerified(true);
-                    otpRepo.save(entity);
-                    return true;
-                }).orElse(false);
+        OtpData otpData = otpStore.get(email);
+        if (otpData == null) {
+            System.out.println("No OTP found for email: " + email);
+            return false;
+        }
+
+        if (otpData.getExpiry().isBefore(LocalDateTime.now())) {
+            System.out.println("OTP expired for email: " + email);
+            return false;
+        }
+
+        boolean isValid = otpData.getOtp().equals(otp);
+        if (!isValid) {
+            System.out.println("Invalid OTP provided for email: " + email);
+            return false;
+        }
+
+        otpStore.remove(email); // OTP used, remove from store
+        return true;
     }
+
 }

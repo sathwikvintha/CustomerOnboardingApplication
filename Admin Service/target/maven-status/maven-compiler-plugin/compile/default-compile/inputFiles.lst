@@ -3,6 +3,7 @@ C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin S
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\dto\DashboardMetricsDTO.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\repository\CustomerRepository.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\repository\KycStatusRepository.java
+C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\enums\Role.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\service\AuthServiceImpl.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\config\MailConfig.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\service\KycStatusService.java
@@ -32,6 +33,7 @@ C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin S
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\config\AuditConfig.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\service\OtpService.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\dto\KycReverifyRequestDTO.java
+C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\dto\OtpData.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\dto\CustomerResponseDTO.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\entity\OtpVerification.java
 C:\Users\Sathwik Vintha\Documents\Projects\customeronboardingapplication\Admin Service\src\main\java\com\customeronboarding\admin\repository\AdminUserRepository.java
