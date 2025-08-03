@@ -137,6 +137,13 @@ public class AuthController {
         String secret = TOTPUtil.generateSecretKey();
         String qrCodeUrl = TOTPUtil.getQRImage(secret, username, "CustomerOnboardingApp");
 
+        adminUserRepository.findByUsername(username).flatMap(user -> customerRepository.findByUserId(user.getId())).ifPresent(customer ->
+                customerActivityClient.logActivity(
+                        customer.getCustomerId(),
+                        "SETUP_2FA",
+                        "2FA setup initiated"
+                ));
+
         Map<String, String> response = new HashMap<>();
         response.put("secret", secret);
         response.put("qrCodeBase64", qrCodeUrl);

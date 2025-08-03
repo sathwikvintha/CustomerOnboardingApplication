@@ -8,6 +8,8 @@ import com.customeronboarding.admin.entity.Customer;
 import com.customeronboarding.admin.entity.KycDocuments;
 import org.springframework.data.domain.Page;
 
+import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AdminService {
@@ -31,9 +33,12 @@ public interface AdminService {
     List<Customer> searchCustomersByName(String name);
     List<Customer> searchCustomersByEmail(String email);
 
-    DashboardMetricsDTO getDashboardMetrics();
+    DashboardMetricsDTO getDashboardMetrics(LocalDate from, LocalDate to);
 
     String registerCustomer(UserRegistrationRequestDTO request);
 
     void reactivateCustomer(Long customerId);
+
+    void exportKycStatusToCsv(PrintWriter writer);
+
 }

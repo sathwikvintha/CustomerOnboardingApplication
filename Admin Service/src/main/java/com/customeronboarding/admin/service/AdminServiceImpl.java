@@ -21,7 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -146,12 +149,15 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public DashboardMetricsDTO getDashboardMetrics() {
-        long totalCustomers = customerRepository.count();
-        long verified = kycStatusRepository.countByStatus(KycStatusEnum.VERIFIED);
-        long pending = kycStatusRepository.countByStatus(KycStatusEnum.PENDING);
-        long rejected = kycStatusRepository.countByStatus(KycStatusEnum.REJECTED);
-        long noKyc = customerRepository.countByKycStatusIsNull();
+    public DashboardMetricsDTO getDashboardMetrics(LocalDate from, LocalDate to) {
+        LocalDateTime start = from != null ? from.atStartOfDay() : LocalDate.MIN.atStartOfDay();
+        LocalDateTime end = to != null ? to.atTime(LocalTime.MAX) : LocalDate.MAX.atTime(LocalTime.MAX);
+
+        long totalCustomers = customerRepository.countByCreatedAtBetween(start, end);
+        long verified = kycStatusRepository.countByStatusAndVerifiedAtBetween(KycStatusEnum.VERIFIED, start, end);
+        long pending = kycStatusRepository.countByStatusAndCreatedAtBetween(KycStatusEnum.PENDING, start, end);
+        long rejected = kycStatusRepository.countByStatusAndCreatedAtBetween(KycStatusEnum.REJECTED, start, end);
+        long noKyc = customerRepository.countByKycStatusIsNullAndCreatedAtBetween(start, end);
 
         return DashboardMetricsDTO.builder()
                 .totalCustomers(totalCustomers)
@@ -161,6 +167,7 @@ public class AdminServiceImpl implements AdminService {
                 .kycNotSubmitted(noKyc)
                 .build();
     }
+
 
     @Override
     public String registerCustomer(UserRegistrationRequestDTO request) {
@@ -201,5 +208,25 @@ public class AdminServiceImpl implements AdminService {
 
         activityService.logActivity(user.getId(), "ACCOUNT_REACTIVATED", "Admin reactivated the customer's account");
     }
+
+    @Override
+    public void exportKycStatusToCsv(PrintWriter writer) {
+        List<KycStatus> statuses = kycStatusRepository.findAll();
+
+        writer.println("Customer ID,Status,Verified By,Verified At,Message");
+
+        for (KycStatus status : statuses) {
+            Long customerId = status.getCustomer() != null ? status.getCustomer().getCustomerId() : null;
+            writer.printf("%s,%s,%s,%s,%s%n",
+                    customerId != null ? customerId.toString() : "",
+                    status.getStatus(),
+                    status.getVerifiedBy() != null ? status.getVerifiedBy() : "",
+                    status.getVerifiedAt() != null ? status.getVerifiedAt().toString() : "",
+                    status.getAdminMessage() != null ? status.getAdminMessage().replace(",", " ") : ""
+            );
+        }
+    }
+
+
 
 }

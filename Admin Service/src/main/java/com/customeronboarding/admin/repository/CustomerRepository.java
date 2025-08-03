@@ -4,6 +4,7 @@ import com.customeronboarding.admin.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     long countByKycStatusIsNull();
     Optional<Customer> findByUserId(Long userId);
     Optional<Customer> findByEmail(String email);
+    long countByCreatedAtBetween(LocalDateTime from, LocalDateTime to);
+
+    long countByKycStatusIsNullAndCreatedAtBetween(LocalDateTime from, LocalDateTime to);
+
 }
