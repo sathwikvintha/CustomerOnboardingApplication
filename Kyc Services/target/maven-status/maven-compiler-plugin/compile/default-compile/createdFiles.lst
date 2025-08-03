@@ -6,13 +6,16 @@ com\customeronboarding\kyc\dto\KycStatusUpdateDTO$KycStatusUpdateDTOBuilder.clas
 com\customeronboarding\kyc\controller\KycController.class
 com\customeronboarding\kyc\dto\KycUploadRequestDTO$KycUploadRequestDTOBuilder.class
 com\customeronboarding\kyc\config\SecurityConfig.class
+com\customeronboarding\kyc\feign\CustomerActivityClient.class
 com\customeronboarding\kyc\config\AuditorAwareImpl.class
 com\customeronboarding\kyc\dto\KycUploadRequestDTO.class
 com\customeronboarding\kyc\entity\KycStatus$Status.class
+com\customeronboarding\kyc\dto\KycHistoryDTO.class
 com\customeronboarding\kyc\service\KycService.class
 com\customeronboarding\kyc\dto\KycStatusUpdateRequest.class
 com\customeronboarding\kyc\repository\KycStatusRepository.class
 com\customeronboarding\kyc\service\KycServiceImpl.class
+com\customeronboarding\kyc\dto\KycNotificationDTO.class
 com\customeronboarding\kyc\dto\KycStatusUpdateDTO.class
 com\customeronboarding\kyc\dto\KycResponseDTO.class
 com\customeronboarding\kyc\repository\KycDocumentRepository.class
@@ -23,3 +26,4 @@ com\customeronboarding\kyc\entity\KycStatus$KycStatusBuilder.class
 com\customeronboarding\kyc\entity\KycStatus.class
 com\customeronboarding\kyc\config\SwaggerConfig.class
 com\customeronboarding\kyc\dto\KycResponseDTO$KycResponseDTOBuilder.class
+com\customeronboarding\kyc\dto\ResubmitKycRequestDTO.class

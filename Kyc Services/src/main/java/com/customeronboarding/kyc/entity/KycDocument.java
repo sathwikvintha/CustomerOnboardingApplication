@@ -24,6 +24,7 @@ public class KycDocument {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long docId;
 
     @Column(nullable = false)
@@ -45,6 +46,7 @@ public class KycDocument {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @CreatedBy
