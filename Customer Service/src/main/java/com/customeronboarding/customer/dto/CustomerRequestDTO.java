@@ -32,4 +32,7 @@ public class CustomerRequestDTO {
 
     @Pattern(regexp = "\\d{12}", message = "Aadhaar must be 12 digits")
     private String aadhaarNumber;
+
+    private String isActive;
+    private Long customerId;
 }

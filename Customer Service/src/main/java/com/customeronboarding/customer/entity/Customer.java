@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "CUSTOMERS")
 @Data
@@ -20,13 +21,14 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class Customer {
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private AdminUser user;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CUSTOMER_ID")
     private Long customerId;
-
-    @Column(name = "USER_ID", nullable = false, unique = true)
-    private Long userId;
 
     @Column(name = "FULL_NAME", nullable = false)
     private String fullName;
@@ -62,5 +64,30 @@ public class Customer {
 
     @LastModifiedBy
     private String updatedBy;
-}
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "IS_ACTIVE", nullable = false)
+    private Status isActive;
+
+
+    public enum Status {
+        ACTIVE,
+        INACTIVE
+    }
+
+    public Status getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Status isActive) {
+        this.isActive = isActive;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public AdminUser getUser() {
+        return user;
+    }
+    }
