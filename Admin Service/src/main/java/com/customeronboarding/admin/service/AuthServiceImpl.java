@@ -1,6 +1,6 @@
 package com.customeronboarding.admin.service;
 
-import com.customeronboarding.admin.Util.OtpUtil;
+import com.customeronboarding.admin.util.OtpUtil;
 import com.customeronboarding.admin.config.JwtUtils;
 import com.customeronboarding.admin.dto.AuthResponseDTO;
 import com.customeronboarding.admin.dto.OtpData;

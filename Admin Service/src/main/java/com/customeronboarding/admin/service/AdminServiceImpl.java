@@ -5,6 +5,7 @@ import com.customeronboarding.admin.dto.KycReverifyRequestDTO;
 import com.customeronboarding.admin.dto.KycStatusResponseDTO;
 import com.customeronboarding.admin.dto.UserRegistrationRequestDTO;
 import com.customeronboarding.admin.entity.*;
+import com.customeronboarding.admin.feign.CustomerActivityClient;
 import com.customeronboarding.admin.mapper.KycStatusMapper;
 import com.customeronboarding.admin.repository.AdminUserRepository;
 import com.customeronboarding.admin.repository.CustomerRepository;
@@ -33,6 +34,10 @@ public class AdminServiceImpl implements AdminService {
     private final CustomerRepository customerRepository;
     private final KycDocumentsRepository kycDocumentsRepository;
     private final KycStatusMapper mapper;
+    private final CustomerActivityClient activityClient;
+    @Autowired
+    private ActivityService activityService;
+
 
     @Autowired
     private AdminUserRepository adminUserRepository;
@@ -172,6 +177,29 @@ public class AdminServiceImpl implements AdminService {
         adminUserRepository.save(user); // persist and retrieve saved user with ID
 
         return "Customer registered successfully.";
+    }
+
+
+    @Override
+    public void reactivateCustomer(Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        if (Boolean.TRUE.equals(customer.getIsActive())) {
+            throw new RuntimeException("Customer account is already active");
+        }
+
+        customer.setIsActive(String.valueOf("ACTIVE"));
+        customer.setUpdatedAt(LocalDateTime.now());
+        customer.setUpdatedBy("ADMIN"); // or fetch actual admin username/email if available
+        customerRepository.save(customer);
+
+        // Also update USERS table
+        AdminUser user = adminUserRepository.findById(customer.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        adminUserRepository.save(user);
+
+        activityService.logActivity(user.getId(), "ACCOUNT_REACTIVATED", "Admin reactivated the customer's account");
     }
 
 }

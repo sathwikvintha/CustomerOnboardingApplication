@@ -1,4 +1,4 @@
-package com.customeronboarding.admin.Util;
+package com.customeronboarding.admin.util;
 
 import org.springframework.stereotype.Component;
 

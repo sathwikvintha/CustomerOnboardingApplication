@@ -1,4 +1,5 @@
 package com.customeronboarding.admin.service;
 
-public class ActivityService {
+public interface ActivityService {
+    void logActivity(Long userId, String action, String description);
 }

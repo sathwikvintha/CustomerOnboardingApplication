@@ -35,5 +35,5 @@ public interface AdminService {
 
     String registerCustomer(UserRegistrationRequestDTO request);
 
-
+    void reactivateCustomer(Long customerId);
 }

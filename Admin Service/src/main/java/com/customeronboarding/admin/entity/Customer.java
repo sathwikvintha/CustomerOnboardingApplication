@@ -67,4 +67,7 @@ public class Customer {
 
     @LastModifiedBy
     private String updatedBy;
+
+    @Column(name = "IS_ACTIVE", nullable = false)
+    private String isActive = "ACTIVE";
 }

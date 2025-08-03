@@ -2,6 +2,7 @@ com\customeronboarding\admin\service\KycStatusServiceImpl.class
 com\customeronboarding\admin\config\JwtUtils.class
 com\customeronboarding\admin\dto\AuthResponseDTO.class
 com\customeronboarding\admin\entity\KycStatus$KycStatusBuilder.class
+com\customeronboarding\admin\util\OtpUtil.class
 com\customeronboarding\admin\config\MailConfig.class
 com\customeronboarding\admin\dto\KycDocumentsResponseDTO.class
 com\customeronboarding\admin\repository\KycDocumentsRepository.class
@@ -11,7 +12,9 @@ com\customeronboarding\admin\dto\ResetPasswordRequestDTO.class
 com\customeronboarding\admin\entity\Customer.class
 com\customeronboarding\admin\mapper\KycStatusMapper.class
 com\customeronboarding\admin\entity\OtpVerification.class
+com\customeronboarding\admin\repository\ActivityLogRepository.class
 com\customeronboarding\admin\repository\CustomerRepository.class
+com\customeronboarding\admin\entity\ActivityLog.class
 com\customeronboarding\admin\client\KycFeignClient.class
 com\customeronboarding\admin\dto\UserRegistrationRequestDTO.class
 com\customeronboarding\admin\dto\OtpRequestDTO.class
@@ -22,6 +25,7 @@ com\customeronboarding\admin\service\EmailServiceImpl.class
 com\customeronboarding\admin\config\AuditConfig.class
 com\customeronboarding\admin\entity\AdminUser.class
 com\customeronboarding\admin\dto\KycStatusResponseDTO.class
+com\customeronboarding\admin\service\ActivityService.class
 com\customeronboarding\admin\service\AdminServiceImpl.class
 com\customeronboarding\admin\service\OtpService.class
 com\customeronboarding\admin\dto\DashboardMetricsDTO.class
@@ -31,10 +35,12 @@ com\customeronboarding\admin\config\JwtAuthFilter.class
 com\customeronboarding\admin\controller\AdminController.class
 com\customeronboarding\admin\client\CustomerFeignClient.class
 com\customeronboarding\admin\enums\Role.class
-com\customeronboarding\admin\Util\OtpUtil.class
+com\customeronboarding\admin\dto\RefreshTokenRequestDTO.class
+com\customeronboarding\admin\service\ActivityServiceImpl.class
 com\customeronboarding\admin\service\AuthServiceImpl.class
 com\customeronboarding\admin\entity\KycDocuments$KycDocumentsBuilder.class
 com\customeronboarding\admin\service\AuthService.class
+com\customeronboarding\admin\util\TOTPUtil.class
 com\customeronboarding\admin\config\SecurityConfig.class
 com\customeronboarding\admin\AdminApplication.class
 com\customeronboarding\admin\dto\LoginRequest.class
@@ -43,6 +49,8 @@ com\customeronboarding\admin\repository\AdminUserRepository.class
 com\customeronboarding\admin\dto\OtpData.class
 com\customeronboarding\admin\dto\DashboardMetricsDTO$DashboardMetricsDTOBuilder.class
 com\customeronboarding\admin\service\OtpServiceImpl.class
+com\customeronboarding\admin\entity\ActivityLog$ActivityLogBuilder.class
+com\customeronboarding\admin\feign\CustomerActivityClient.class
 com\customeronboarding\admin\dto\KycStatusUpdateRequest.class
 com\customeronboarding\admin\entity\KycDocuments.class
 com\customeronboarding\admin\service\AdminService.class

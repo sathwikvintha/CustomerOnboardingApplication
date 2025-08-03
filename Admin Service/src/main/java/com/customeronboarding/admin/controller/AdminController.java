@@ -6,6 +6,7 @@ import com.customeronboarding.admin.dto.KycStatusResponseDTO;
 import com.customeronboarding.admin.dto.UserRegistrationRequestDTO;
 import com.customeronboarding.admin.entity.Customer;
 import com.customeronboarding.admin.entity.KycDocuments;
+import com.customeronboarding.admin.feign.CustomerActivityClient;
 import com.customeronboarding.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,19 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+    private final CustomerActivityClient customerActivityClient;
+
 
     // ✅ Update KYC status
     @PutMapping("/kyc-status")
     public ResponseEntity<String> updateKycStatus(@RequestBody KycStatusResponseDTO statusRequest) {
-        return ResponseEntity.ok(adminService.updateKycStatus(statusRequest));
+        String result = adminService.updateKycStatus(statusRequest);
+        customerActivityClient.logActivity(
+                statusRequest.getCustomerId(),
+                "UPDATE_KYC_STATUS",
+                "Admin updated KYC status to " + statusRequest.getStatus()
+        );
+        return ResponseEntity.ok(result);
     }
 
     // ✅ Get single KYC status by customer ID
@@ -47,7 +56,13 @@ public class AdminController {
     // ✅ Delete customer
     @DeleteMapping("/customers/{customerId}")
     public ResponseEntity<String> deleteCustomer(@PathVariable Long customerId) {
-        return ResponseEntity.ok(adminService.deleteCustomer(customerId));
+        String result = adminService.deleteCustomer(customerId);
+        customerActivityClient.logActivity(
+                customerId,
+                "DELETE_CUSTOMER",
+                "Admin deleted customer"
+        );
+        return ResponseEntity.ok(result);
     }
 
     // ✅ Get KYC documents for a customer
@@ -65,7 +80,13 @@ public class AdminController {
     // ✅ Mark KYC for re-verification
     @PutMapping("/kyc/mark-reverify")
     public ResponseEntity<String> markKycForReverification(@RequestBody KycReverifyRequestDTO request) {
-        return ResponseEntity.ok(adminService.markKycReverifyRequired(request));
+        String result = adminService.markKycReverifyRequired(request);
+        customerActivityClient.logActivity(
+                request.getCustomerId(),
+                "KYC_REVERIFY_REQUESTED",
+                "Admin requested KYC re-verification"
+        );
+        return ResponseEntity.ok(result);
     }
 
     // ✅ Search customers by name
@@ -89,7 +110,19 @@ public class AdminController {
     @PostMapping("/register")
     public ResponseEntity<String> registerCustomer(@RequestBody UserRegistrationRequestDTO request) {
         String message = adminService.registerCustomer(request);
+        customerActivityClient.logActivity(
+                null,
+                "REGISTER_CUSTOMER",
+                "Admin registered customer with username: " + request.getUsername()
+        );
         return ResponseEntity.ok(message);
     }
+
+    @PatchMapping("/customers/{id}/reactivate")
+    public ResponseEntity<String> reactivateCustomer(@PathVariable Long id) {
+        adminService.reactivateCustomer(id);
+        return ResponseEntity.ok("Customer account reactivated successfully");
+    }
+
 
 }

@@ -1,7 +1,9 @@
 package com.customeronboarding.admin.config;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(String username) {
         long expirationMillis = 1000 * 60 * 60; // 1 hour
@@ -37,6 +41,15 @@ public class JwtUtils {
                 .getSubject();
     }
 
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7); // Remove "Bearer "
+        }
+        return null;
+    }
+
+
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
@@ -45,4 +58,23 @@ public class JwtUtils {
             return false;
         }
     }
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)) // 7 days
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String extractUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
 }
